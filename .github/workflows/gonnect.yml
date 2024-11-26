@@ -105,6 +105,13 @@ jobs:
           checks: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
           warnings_as_errors: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
 
+      - name: "Print results"
+        shell: bash
+        run: echo "::debug::Clazy resulted in $ERRORS errors and $WARNINGS warnings"
+        env:
+          ERRORS: ${{ steps.clazy.outputs.errors-count }}
+          WARNINGS: ${{ steps.clazy.outputs.errors-count }}
+
       - name: "Fail the job if new findings are introduced"
         if: ${{ steps.clazy.outputs.errors-count > 0 }}
         shell: bash
