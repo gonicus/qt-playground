@@ -97,7 +97,7 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
       - name: Clazy action
-        id: clazy
+        id: clazy-check
         uses: MinyazevR/clazy-standalone-action@v0.2.1
         with:
           install-stable: true
@@ -109,11 +109,11 @@ jobs:
         shell: bash
         run: echo "::debug::Clazy resulted in ${{env.ERRORS}} errors and ${{env.WARNINGS}} warnings"
         env:
-          ERRORS: ${{ steps.clazy.outputs.errors-count }}
-          WARNINGS: ${{ steps.clazy.outputs.warnings-count }}
+          ERRORS: ${{ steps.clazy-check.outputs.errors-count }}
+          WARNINGS: ${{ steps.clazy-check.outputs.warnings-count }}
 
       - name: "Fail the job if new findings are introduced"
-        if: ${{ steps.clazy.outputs.errors-count > 0 }}
+        if: ${{ steps.clazy-check.outputs.errors-count > 0 }}
         shell: bash
         run: |
           echo "::error title=Clazy analysis errors::Analysed commit would introduce new clazy analysis errors and potential bugs to the project"
