@@ -14,11 +14,43 @@ env:
   BUILD_TYPE: Release
 
 jobs:
+  clang:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run clang-format style check
+        uses: jidicula/clang-format-action@v4.13.0
+        with:
+          clang-format-version: '13'
+          check-path: '.'
+          fallback-style: 'LLVM' # optional
+
+  clazy:
+    runs-on: ubuntu-latest    
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Clazy action
+        uses: MinyazevR/clazy-standalone-action@v0.2.1
+        with:
+          install-stable: true
+          ignore-dirs: '(.*qmltyperegistrations.*|.*/tests/.*|.*/\\.rcc/.*)'
+          checks: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
+
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      #- uses: build/tests/contactsTest 
+
   build:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
+    needs: [clazy, clang, tests]
 
     steps:
     - uses: actions/checkout@v4
