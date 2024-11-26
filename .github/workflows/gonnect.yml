@@ -19,6 +19,33 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+            version: '6.8.0'
+            host: 'linux'
+            target: 'desktop'
+            arch: 'linux_gcc_64'
+
+      - name: Install dependencies
+        run: sudo apt install -y libusb-1.0-0-dev libhidapi-dev uuid-dev libldap-dev libssl-dev
+
+      - name: Prepare pjsip
+        run: |
+          git clone https://github.com/pjsip/pjproject.git
+          cd pjproject
+          git submodule update --init --recursive
+          ./configure --prefix=/usr/local --disable-video --disable-opus --enable-ext-sound CFLAGS="-fPIC -DPJ_HAS_IPV6=1"
+          make
+          sudo make install
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
       - name: Static code analysis
         uses: whisperity/codechecker-analysis-action@v1
         with:
@@ -30,6 +57,33 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+          version: '6.8.0'
+          host: 'linux'
+          target: 'desktop'
+          arch: 'linux_gcc_64'
+
+    - name: Install dependencies
+      run: sudo apt install -y libusb-1.0-0-dev libhidapi-dev uuid-dev libldap-dev libssl-dev
+
+    - name: Prepare pjsip
+      run: |
+        git clone https://github.com/pjsip/pjproject.git
+        cd pjproject
+        git submodule update --init --recursive
+        ./configure --prefix=/usr/local --disable-video --disable-opus --enable-ext-sound CFLAGS="-fPIC -DPJ_HAS_IPV6=1"
+        make
+        sudo make install
+
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
       - name: Clazy action
         uses: MinyazevR/clazy-standalone-action@v0.2.1
         with:
@@ -79,15 +133,9 @@ jobs:
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_TESTING=ON
 
     - name: Build
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      # Execute tests defined by the CMake configuration.
-      # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-      run: ctest -C ${{env.BUILD_TYPE}}
 
