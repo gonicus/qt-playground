@@ -57,25 +57,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v4
-      with:
-          version: '6.8.0'
-          host: 'linux'
-          target: 'desktop'
-          arch: 'linux_gcc_64'
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+            version: '6.8.0'
+            host: 'linux'
+            target: 'desktop'
+            arch: 'linux_gcc_64'
 
-    - name: Install dependencies
-      run: sudo apt install -y libusb-1.0-0-dev libhidapi-dev uuid-dev libldap-dev libssl-dev
+      - name: Install dependencies
+        run: sudo apt install -y libusb-1.0-0-dev libhidapi-dev uuid-dev libldap-dev libssl-dev
 
-    - name: Prepare pjsip
-      run: |
-        git clone https://github.com/pjsip/pjproject.git
-        cd pjproject
-        git submodule update --init --recursive
-        ./configure --prefix=/usr/local --disable-video --disable-opus --enable-ext-sound CFLAGS="-fPIC -DPJ_HAS_IPV6=1"
-        make
-        sudo make install
+      - name: Prepare pjsip
+        run: |
+          git clone https://github.com/pjsip/pjproject.git
+          cd pjproject
+          git submodule update --init --recursive
+          ./configure --prefix=/usr/local --disable-video --disable-opus --enable-ext-sound CFLAGS="-fPIC -DPJ_HAS_IPV6=1"
+          make
+          sudo make install
 
       - name: Configure CMake
         run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
