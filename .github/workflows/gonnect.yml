@@ -50,7 +50,7 @@ jobs:
         uses: whisperity/codechecker-analysis-action@v1
         with:
           version: '6.24.4'
-          logfile: ${{ github.workspace }}/Build/compile_commands.json
+          logfile: ${{ github.workspace }}/build/compile_commands.json
 
   clazy:
     runs-on: ubuntu-latest    
