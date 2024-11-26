@@ -66,12 +66,13 @@ jobs:
       run: sudo apt install -y libusb-1.0-0-dev libhidapi-dev uuid-dev libldap-dev libssl-dev
 
     - name: Prepare pjsip
-      run:
-        - git clone https://github.com/pjsip/pjproject.git && cd pjproject
-        - git submodule update --init --recursive
-        - ./configure --prefix=/usr/local --disable-video --disable-opus --enable-ext-sound CFLAGS="-fPIC -DPJ_HAS_IPV6=1"
-        - make
-        - sudo make install
+      run: |
+        git clone https://github.com/pjsip/pjproject.git
+        cd pjproject
+        git submodule update --init --recursive
+        ./configure --prefix=/usr/local --disable-video --disable-opus --enable-ext-sound CFLAGS="-fPIC -DPJ_HAS_IPV6=1"
+        make
+        sudo make install
 
 #    - name: Prepare qca
 
