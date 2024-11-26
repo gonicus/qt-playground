@@ -107,10 +107,10 @@ jobs:
 
       - name: "Print results"
         shell: bash
-        run: echo "::debug::Clazy resulted in $ERRORS errors and $WARNINGS warnings"
+        run: echo "::debug::Clazy resulted in ${{env.ERRORS}} errors and ${{env.WARNINGS}} warnings"
         env:
           ERRORS: ${{ steps.clazy.outputs.errors-count }}
-          WARNINGS: ${{ steps.clazy.outputs.errors-count }}
+          WARNINGS: ${{ steps.clazy.outputs.warnings-count }}
 
       - name: "Fail the job if new findings are introduced"
         if: ${{ steps.clazy.outputs.errors-count > 0 }}
