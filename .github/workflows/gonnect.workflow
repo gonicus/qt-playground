@@ -19,15 +19,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Run clang-format style check
-        uses: jidicula/clang-format-action@v4.13.0
+      - name: Static code analysis
+        uses: whisperity/codechecker-analysis-action@v1
         with:
-          clang-format-version: '13'
-          check-path: '.'
-          fallback-style: 'LLVM' # optional
+          logfile: ${{ github.workspace }}/Build/compile_commands.json
 
   clazy:
     runs-on: ubuntu-latest    
+    needs: [build]
 
     steps:
       - uses: actions/checkout@v4
@@ -40,6 +39,7 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
+    needs: [build]
 
     steps:
       - uses: actions/checkout@v4
@@ -50,7 +50,6 @@ jobs:
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
-    needs: [clazy, clang, tests]
 
     steps:
     - uses: actions/checkout@v4
@@ -63,10 +62,23 @@ jobs:
           target: 'desktop'
           arch: 'linux_gcc_64'
 
+    - name: Install dependencies
+      run: sudo apt install -y libusb-1.0-0-dev libhidapi-dev uuid-dev libldap-dev libssl-dev
+
+    - name: Prepare pjsip
+      run:
+        - git clone https://github.com/pjsip/pjproject.git && cd pjproject
+        - git submodule update --init --recursive
+        - ./configure --prefix=/usr/local --disable-video --disable-opus --enable-ext-sound CFLAGS="-fPIC -DPJ_HAS_IPV6=1"
+        - make
+        - sudo make install
+
+#    - name: Prepare qca
+
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
     - name: Build
       # Build your program with the given configuration
