@@ -89,6 +89,7 @@ jobs:
           install-stable: true
           ignore-dirs: '(.*qmltyperegistrations.*|.*/tests/.*|.*/\\.rcc/.*)'
           checks: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
+          warnings_as_errors: unused-value,warnings,macro-redefined,writable-strings,return-type,null-conversion,pragma-system-header-outside-header,implicit-function-declaration
 
   tests:
     runs-on: ubuntu-latest
