@@ -51,18 +51,17 @@ jobs:
         uses: whisperity/codechecker-analysis-action@v1
         with:
           version: '6.24.4'
-          logfile: ${{ github.workspace }}/build/compile_commands.json
-
-      # Upload the results to the CI.
-      - uses: actions/upload-artifact@v4
-        with:
-          name: "CodeChecker Bug Reports"
-          path: ${{ steps.codechecker.outputs.result-log }}          
+          logfile: ${{ github.workspace }}/build/compile_commands.json       
       
       # Break the build if there are *ANY* warnings emitted by the analysers.
       - name: "Break build if CodeChecker reported any findings"
         if: ${{ steps.codechecker.outputs.warnings == 'true' }}
-        run: exit 1
+        run: |
+          echo '### Clang summary:' >> $GITHUB_STEP_SUMMARY
+          grep -v "Found no defects in" $RESULT_LOG >>  $GITHUB_STEP_SUMMARY          
+          exit 1
+        env:
+          RESULT_LOG: ${{ steps.codechecker.outputs.result-log }} 
 
   clazy:
     runs-on: ubuntu-latest    
