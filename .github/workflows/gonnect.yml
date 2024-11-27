@@ -42,7 +42,7 @@ jobs:
           sudo make install
 
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
@@ -92,7 +92,7 @@ jobs:
           sudo make install
 
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
@@ -104,7 +104,7 @@ jobs:
           install-stable: true
           ignore-dirs: '(.*qmltyperegistrations.*|.*/tests/.*|.*/\\.rcc/.*)'
           checks: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
-          warnings_as_errors: writable-strings
+          warnings_as_errors: level0,level1,qt6-header-fixes
           database: ${{ github.workspace }}/build
 
       - name: "Print results"
