@@ -106,6 +106,7 @@ jobs:
         with:
           install-stable: true
           ignore-dirs: '(.*qmltyperegistrations.*|.*/tests/.*|.*/\\.rcc/.*|.*/pjproject/.*)'
+          header-filter: '.*/pjproject/.*'
           checks: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
           warnings_as_errors: level0,level1,qt6-header-fixes
           database: ${{ github.workspace }}/build

@@ -139,7 +139,7 @@ warnings_count=$(<"$warnings_file")
 errors_count=$(<"$errors_file")
 
 echo "errors-count=${errors_count}" >> $GITHUB_OUTPUT
-echo "warnings-count=${warnings}" >> $GITHUB_OUTPUT
+echo "warnings-count=${warnings_count}" >> $GITHUB_OUTPUT
 
 if [ "$IGNORE_HEADERS" == "true" ] && [ -n "$DATABASE" ]; then
     mv $DATABASE/compile_commands_backup.json $DATABASE/compile_commands.json
