@@ -113,10 +113,10 @@ jobs:
 
       - name: "Print results"
         shell: bash
-        run: echo "::debug::Clazy resulted in ${{env.ERRORS}} errors and ${{env.WARNINGS}} warnings"
+        run: echo "::debug::Clazy resulted in $ERRORS errors and $WARNINGS warnings"
         env:
-          ERRORS: ${{ steps.clazy-check.outputs.errors-count }}
-          WARNINGS: ${{ steps.clazy-check.outputs.warnings-count }}
+          ERRORS: ${{ steps.clazy-check.outputs.ERRORS_COUNT }}
+          WARNINGS: ${{ steps.clazy-check.outputs.WARNINGS_COUNT }}
 
   tests:
     runs-on: ubuntu-latest
