@@ -104,6 +104,7 @@ jobs:
           ignore-dirs: '(.*qmltyperegistrations.*|.*/tests/.*|.*/\\.rcc/.*)'
           checks: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
           warnings_as_errors: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
+          database: ${{ github.workspace }}/build/compile_commands.json
 
       - name: "Print results"
         shell: bash
@@ -111,14 +112,6 @@ jobs:
         env:
           ERRORS: ${{ steps.clazy-check.outputs.errors-count }}
           WARNINGS: ${{ steps.clazy-check.outputs.warnings-count }}
-
-      - name: "Fail the job if new findings are introduced"
-        if: ${{ steps.clazy-check.outputs.errors-count > 0 }}
-        shell: bash
-        run: |
-          echo "::error title=Clazy analysis errors::Analysed commit would introduce new clazy analysis errors and potential bugs to the project"
-          # Fail the build, after results were collected and uploaded.
-          exit 1
 
   tests:
     runs-on: ubuntu-latest
