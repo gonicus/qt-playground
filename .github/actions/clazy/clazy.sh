@@ -54,8 +54,15 @@ else
 
 fi
 
+
+if [ ! -z "${HEADER_FILTER}" ]; then
+    HEADER_FILTER='--header-filter="$HEADER_FILTER'
+else 
+    HEADER_FILTER=''
+fi
+
 output=$(clazy-standalone --checks="$CHECKS" -p="$DATABASE" \
-    --header-filter="$HEADER_FILTER" --ignore-dirs="$IGNORE_DIRS" \
+    $HEADER_FILTER --ignore-dirs="$IGNORE_DIRS" \
     "${options[@]}" "${extra_args[@]}" "${extra_args_before[@]}" "${files[@]}" 2>&1)
 
 warnings_file=$(mktemp)

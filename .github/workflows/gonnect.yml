@@ -16,7 +16,6 @@ env:
 jobs:
   clang:
     runs-on: ubuntu-latest
-    if: false
 
     steps:
       - uses: actions/checkout@v4
@@ -58,7 +57,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: "CodeChecker Bug Reports"
-          path: ${{ steps.codechecker.outputs.result-html-dir }}          
+          path: ${{ steps.codechecker.outputs.result-log }}          
       
       # Break the build if there are *ANY* warnings emitted by the analysers.
       - name: "Break build if CodeChecker reported any findings"
@@ -67,9 +66,6 @@ jobs:
 
   clazy:
     runs-on: ubuntu-latest    
-
-    env:
-      CLAZY_CHECKS_AS_ERRORS: level0,level1,qt6-header-fixes
 
     steps:
       - uses: actions/checkout@v4
@@ -106,17 +102,9 @@ jobs:
         with:
           install-stable: true
           ignore-dirs: '(.*qmltyperegistrations.*|.*/tests/.*|.*/\\.rcc/.*|.*/pjproject/.*)'
-          header-filter: '.*/pjproject/.*'
           checks: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
-          warnings_as_errors: level0,level1,qt6-header-fixes
+          fail-on-warnings: true
           database: ${{ github.workspace }}/build
-
-      - name: "Print results"
-        shell: bash
-        run: echo "::debug::Clazy resulted in $ERRORS errors and $WARNINGS warnings"
-        env:
-          ERRORS: ${{ steps.clazy-check.outputs.ERRORS_COUNT }}
-          WARNINGS: ${{ steps.clazy-check.outputs.WARNINGS_COUNT }}
 
   tests:
     runs-on: ubuntu-latest
