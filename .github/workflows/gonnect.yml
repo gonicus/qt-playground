@@ -102,7 +102,7 @@ jobs:
 
       - name: Clazy action
         id: clazy-check
-        uses: MinyazevR/clazy-standalone-action@v0.2.1
+        uses: ./.github/actions/clazy
         with:
           install-stable: true
           ignore-dirs: '(.*qmltyperegistrations.*|.*/tests/.*|.*/\\.rcc/.*|.*/pjproject/.*)'
