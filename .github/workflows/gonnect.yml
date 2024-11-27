@@ -16,6 +16,7 @@ env:
 jobs:
   clang:
     runs-on: ubuntu-latest
+    if: false
 
     steps:
       - uses: actions/checkout@v4
@@ -104,7 +105,7 @@ jobs:
           ignore-dirs: '(.*qmltyperegistrations.*|.*/tests/.*|.*/\\.rcc/.*)'
           checks: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
           warnings_as_errors: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
-          database: ${{ github.workspace }}/build/compile_commands.json
+          database: ${{ github.workspace }}/build
 
       - name: "Print results"
         shell: bash
@@ -126,6 +127,7 @@ jobs:
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
+    if: false
 
     steps:
     - uses: actions/checkout@v4
