@@ -68,6 +68,9 @@ jobs:
   clazy:
     runs-on: ubuntu-latest    
 
+    env:
+      CLAZY_CHECKS_AS_ERRORS: level0,level1,qt6-header-fixes
+
     steps:
       - uses: actions/checkout@v4
 
@@ -102,7 +105,7 @@ jobs:
         uses: MinyazevR/clazy-standalone-action@v0.2.1
         with:
           install-stable: true
-          ignore-dirs: '(.*qmltyperegistrations.*|.*/tests/.*|.*/\\.rcc/.*)'
+          ignore-dirs: '(.*qmltyperegistrations.*|.*/tests/.*|.*/\\.rcc/.*|.*/pjproject/.*)'
           checks: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
           warnings_as_errors: level0,level1,qt6-header-fixes
           database: ${{ github.workspace }}/build
