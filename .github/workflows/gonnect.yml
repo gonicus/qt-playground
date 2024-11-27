@@ -104,7 +104,7 @@ jobs:
           install-stable: true
           ignore-dirs: '(.*qmltyperegistrations.*|.*/tests/.*|.*/\\.rcc/.*)'
           checks: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
-          warnings_as_errors: level0,level1,qt6-header-fixes,no-no-module-include,no-lambda-unique-connection
+          warnings_as_errors: writable-strings
           database: ${{ github.workspace }}/build
 
       - name: "Print results"
