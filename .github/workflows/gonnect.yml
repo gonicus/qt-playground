@@ -58,7 +58,9 @@ jobs:
         if: ${{ steps.codechecker.outputs.warnings == 'true' }}
         run: |
           echo '### Clang summary:' >> $GITHUB_STEP_SUMMARY
-          grep -v "Found no defects in" $RESULT_LOG >>  $GITHUB_STEP_SUMMARY          
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          grep -v "Found no defects in" $RESULT_LOG >>  $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
           exit 1
         env:
           RESULT_LOG: ${{ steps.codechecker.outputs.result-log }} 
